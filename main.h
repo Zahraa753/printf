@@ -74,5 +74,8 @@ int _puts(char *str);
 int _putchar (int c);
 /*ending*/
 
+/*_printf prototype*/
+int _printf(const char *format, ...);
+
 #endif /* _HEADER_PRINTF_H*/
 
