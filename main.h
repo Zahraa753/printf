@@ -1,81 +1,118 @@
-#ifndef _HEADER_PRINTF_H
-#define _HEADER_PRINTF_H
-
-/*including used libraries*/
+#ifndef _ALEX_TEAM_H
+#define _ALEX_TEAM_H
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <limits>
-#include <stdlib.h>
-/*ending including libraries*/
 
-/*initializing and defining needed arguments*/
-#define OUT_BUFER_SIZE 1024
-#define BUF_End -1
-#define NULL_string "(nil)"
-#define IN_PARAM {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define convert_LOWER 1
-#define convert_UNSIGNED 2
-/*ending initializing arguments (MACROS)*/
+#define UNUSED(x) (void)(x)
+#define BUFF_SIZE 1024
 
-/*initializing function i need for task 0,1>>printf>.function mudules*/
-int print_char(va_list co, PARAM_O *obj);
-int print_string_s(va_list co, PARAM_O *obj);
-int print_int_i_d(va_list co, PARAM_O *obj);
-int print_percent(va_list co, PARAM_O *obj);
-int print_S(va_list co, PARAM_O *obj);
-/*ending*/
+/* FLAGS */
+#define F_MINUS 1
+#define F_PLUS 2
+#define F_ZERO 4
+#define F_HASH 8
+#define F_SPACE 16
 
-/*initializing struct will be used to git decision*/
+/* sizes */
+#define S_LONG 2
+#define S_SHORT 1
+
 /**
-* struct members- the used struct
-*@unsign: flag for unsigned
-*@plus_f: flag for plus
-*@space_f: flag for space_t
-*@hashtag_f: flag for hashtag
-*@zero_f: flag for zero
-*@minus_f: flag for minus
-*@width_X: the width of text
-*@precise: the precision of text
-*@h_mod: short integer
-*@l_mod: long integer
-*/
-
-typedef struct members
+ * struct handleob - Struct op
+ *
+ * @handleob: The format.
+ * @fn: The function associated.
+ */
+struct handleob
 {
-	unsigned int unsign :1;
-	unsigned int plus_f :1;
-	unsigned int space_f :1;
-	unsigned int hashtag_f :1;
-	unsigned int zero_f :1;
-	unsigned int minus_f :1;
-	unsigned int width_X :1;
-	unsigned int precise :1;
-	unsigned int h_mod :1;
-	unsigned int l_mod :1;
-} PARAM_O;
-/*end initalizing*/
+	char handleob;
+	int (*fn)(va_list, char[], int, int, int, int);
+};
 
-/*intializing specifiers struct*/
+
 /**
-*struct space- struct ro deal with specifires %..
-*@space_f: format token
-*@f: a pointer to a function deal with specifiers
-*/
-typedef struct space
-{
-	char *space_f;
-	int (*f)(va_list, PARAM_O *);
-} space_t;
-/*ending intializing*/
+ * typedef struct handleob handle_t - Struct op
+ *
+ * @handleob: The format.
+ * @fm_t: The function associated.
+ */
+typedef struct handleob handle_t;
 
-/*initializing Put && PUTCHAR*/
-int _puts(char *str);
-int _putchar (int c);
-/*ending*/
-
-/*_printf prototype*/
 int _printf(const char *format, ...);
+int handle_print(const char *handleob, int *i,
+va_list list, char buffer[], int flags, int width, int precision, int size);
 
-#endif /* _HEADER_PRINTF_H*/
+/* functions */
+
+/* Funtions to print chars and strings */
+int print_char(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_string(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_percent(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+/* Functions to print numbers */
+int print_int(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_binary(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_unsigned(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_octal(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_hexadecimal(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_hexa_upper(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+int print_hexa(va_list types, char map_to[],
+char buffer[], int flags, char flag_ch, int width, int precision, int size);
+
+/* Function to print non printable characters */
+int print_non_printable(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+/* Funcion to print memory address */
+int print_pointer(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+/* Funciotns to handle other specifiers */
+int get_flags(const char *format, int *i);
+int get_width(const char *format, int *i, va_list list);
+int get_precision(const char *format, int *i, va_list list);
+int get_size(const char *format, int *i);
+
+/*Function to print string in reverse*/
+int print_reverse(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+/*Function to print a string in rot 13*/
+int print_rot13string(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+/* width handlers */
+int handle_write_char(char c, char buffer[],
+	int flags, int width, int precision, int size);
+int write_number(int is_positive, int ind, char buffer[],
+	int flags, int width, int precision, int size);
+int write_num(int ind, char bff[], int flags, int width, int precision,
+	int length, char padd, char extra_c);
+int write_pointer(char buffer[], int ind, int length,
+	int width, int flags, char padd, char extra_c, int padd_start);
+
+int write_unsgnd(int is_negative, int ind,
+char buffer[],
+	int flags, int width, int precision, int size);
+
+/* UTILS */
+int is_printable(char);
+int append_hexa_code(char, char[], int);
+int is_digit(char);
+
+long int convert_size_number(long int num, int size);
+long int convert_size_unsgnd(unsigned long int num, int size);
+
+#endif /* _ALEX_TEAM_H */
 
